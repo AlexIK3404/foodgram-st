@@ -1,17 +1,69 @@
-version: '3.3'
+version: '3.8'
+
+volumes:
+  pg_data:
+  static_volume:
+
 services:
+  db:
+    container_name: foodgram-db
+    image: postgres:15
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  backend:
+    container_name: foodgram-back
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    command: >
+      sh -c "
+        python manage.py makemigrations &&
+        python manage.py migrate &&
+        python manage.py collectstatic --noinput &&
+        gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000
+      "
+    volumes:
+      - ../backend/:/app/
+    expose:
+      - "8000"
+    depends_on:
+      - db
 
   frontend:
     container_name: foodgram-front
-    build: ../frontend
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    command: >
+      sh -c "
+        npm install &&
+        npm run build
+      "
     volumes:
-      - ../frontend/:/app/result_build/
+      # Собранный SPA попадёт в эту папку
+      - ../frontend/build:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+
   nginx:
     container_name: foodgram-proxy
     image: nginx:1.25.4-alpine
     ports:
       - "80:80"
+    depends_on:
+      - backend
+      - frontend
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
+      # Конфиг nginx
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      # Фронтенд-сборка
+      - ../frontend/build:/usr/share/nginx/html:ro
+      # Автоматически собранная статика Django
+      - static_volume:/staticfiles:ro
+      # Документация OpenAPI (redoc/html)
+      - ../docs/:/usr/share/nginx/html/api/docs/:ro
