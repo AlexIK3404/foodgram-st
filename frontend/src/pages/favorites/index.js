@@ -1,9 +1,9 @@
-import { Card, Title, Pagination, CardList, Container, Main, CheckboxGroup  } from '../../components'
+import { Card, Title, Pagination, CardList, Container, Main, CheckboxGroup } from '../../components'
 import styles from './styles.module.css'
 import { useRecipes } from '../../utils/index.js'
 import { useEffect } from 'react'
 import api from '../../api'
-import MetaTags from 'react-meta-tags'
+import { Helmet } from "react-helmet";
 
 const Favorites = ({ updateOrders }) => {
   const {
@@ -16,7 +16,7 @@ const Favorites = ({ updateOrders }) => {
     handleLike,
     handleAddToCart
   } = useRecipes()
-  
+
   const getRecipes = ({ page = 1 }) => {
     api
       .getRecipes({ page, is_favorited: Number(true) })
@@ -34,11 +34,11 @@ const Favorites = ({ updateOrders }) => {
 
   return <Main>
     <Container>
-      <MetaTags>
+      <Helmet>
         <title>Избранное</title>
         <meta name="description" content="Фудграм - Избранное" />
         <meta property="og:title" content="Избранное" />
-      </MetaTags>
+      </Helmet>
       <div className={styles.title}>
         <Title title='Избранное' />
       </div>

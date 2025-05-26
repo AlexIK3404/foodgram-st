@@ -3,29 +3,29 @@ import styles from './styles.module.css'
 import { useHistory } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { AuthContext, UserContext } from '../../contexts'
-import MetaTags from 'react-meta-tags'
+import { Helmet } from "react-helmet";
 
 const UpdateAvatar = ({
   onAvatarChange
 }) => {
   const userContext = useContext(UserContext)
-  
-  const [ avatarFile, setAvatarFile ] = useState(userContext.avatar || null)
-  const [ updated, setUpdated ] = useState(false)
+
+  const [avatarFile, setAvatarFile] = useState(userContext.avatar || null)
+  const [updated, setUpdated] = useState(false)
 
   const checkIfDisabled = () => {
     return avatarFile === '' ||
-    avatarFile === null || 
-    !updated
+      avatarFile === null ||
+      !updated
   }
 
   return <Main withBG asFlex>
     <Container className={styles.center}>
-      <MetaTags>
+      <Helmet>
         <title>Регистрация</title>
         <meta name="description" content="Фудграм - Редактирование аватара" />
         <meta property="og:title" content="Редактирование аватара" />
-      </MetaTags>
+      </Helmet>
       <Form
         className={styles.form}
         onSubmit={e => {

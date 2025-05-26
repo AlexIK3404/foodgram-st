@@ -1,16 +1,16 @@
 import { Title, Container, Main } from '../../components'
 import styles from './styles.module.css'
-import MetaTags from 'react-meta-tags'
+import { Helmet } from "react-helmet";
 
 const Technologies = () => {
-  
+
   return <Main>
-    <MetaTags>
+    <Helmet>
       <title>О проекте</title>
       <meta name="description" content="Фудграм - Технологии" />
       <meta property="og:title" content="О проекте" />
-    </MetaTags>
-    
+    </Helmet>
+
     <Container>
       <h1 className={styles.title}>Технологии</h1>
       <div className={styles.content}>
@@ -34,7 +34,7 @@ const Technologies = () => {
           </div>
         </div>
       </div>
-      
+
     </Container>
   </Main>
 }

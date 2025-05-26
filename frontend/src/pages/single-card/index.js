@@ -13,7 +13,7 @@ import Ingredients from "./ingredients";
 import Description from "./description";
 import cn from "classnames";
 import { useRouteMatch, useParams, useHistory } from "react-router-dom";
-import MetaTags from "react-meta-tags";
+import { Helmet } from "react-helmet";
 import DefaultImage from "../../images/userpic-icon.jpg";
 import { useRecipe } from "../../utils/index.js";
 import api from "../../api";
@@ -92,11 +92,11 @@ const SingleCard = ({ loadItem, updateOrders }) => {
   return (
     <Main>
       <Container>
-        <MetaTags>
+        <Helmet>
           <title>{name}</title>
           <meta name="description" content={`Фудграм - ${name}`} />
           <meta property="og:title" content={name} />
-        </MetaTags>
+        </Helmet>
         <div className={styles["single-card"]}>
           <img
             src={image}
@@ -152,9 +152,8 @@ const SingleCard = ({ loadItem, updateOrders }) => {
                   <div
                     className={styles["single-card__user-avatar"]}
                     style={{
-                      "background-image": `url(${
-                        author.avatar || DefaultImage
-                      })`,
+                      "background-image": `url(${author.avatar || DefaultImage
+                        })`,
                     }}
                   />
                   <LinkComponent

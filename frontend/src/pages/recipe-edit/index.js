@@ -15,7 +15,7 @@ import api from "../../api";
 import { useEffect, useState } from "react";
 import { useTags } from "../../utils";
 import { useParams, useHistory } from "react-router-dom";
-import MetaTags from "react-meta-tags";
+import { Helmet } from "react-helmet";
 import { Icons } from "../../components";
 import cn from "classnames";
 
@@ -134,11 +134,11 @@ const RecipeEdit = ({ onItemDelete }) => {
   return (
     <Main>
       <Container>
-        <MetaTags>
+        <Helmet>
           <title>Редактирование рецепта</title>
           <meta name="description" content="Фудграм - Редактирование рецепта" />
           <meta property="og:title" content="Редактирование рецепта" />
-        </MetaTags>
+        </Helmet>
         <Title title="Редактирование рецепта" />
         <Form
           className={styles.form}
@@ -172,14 +172,13 @@ const RecipeEdit = ({ onItemDelete }) => {
                 }
                 if (ingredients) {
                   return setSubmitError({
-                    submitError: `Ингредиенты: ${
-                      ingredients
+                    submitError: `Ингредиенты: ${ingredients
                         .filter((item) => Object.keys(item).length)
                         .map((item) => {
                           const error = item[Object.keys(item)[0]];
                           return error && error.join(" ,");
                         })[0]
-                    }`,
+                      }`,
                   });
                 }
                 if (cooking_time) {

@@ -45,19 +45,19 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         read_only=True
     )
     name = serializers.CharField(source='ingredient.name', read_only=True)
-    measurement_unit = serializers.CharField(
+    unit = serializers.CharField(
         source='ingredient.unit', read_only=True
     )
 
     class Meta:
         model = RecipeIngredient
-        fields = ('id', 'name', 'measurement_unit', 'amount')
+        fields = ('id', 'name', 'unit', 'amount')
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     ingredients = RecipeIngredientSerializer(
-        source='recipeingredient_set', many=True
+        source='recipe_ingredients', many=True
     )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
@@ -66,7 +66,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = (
             'id', 'author', 'ingredients', 'is_favorited',
-            'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time'
+            'is_in_shopping_cart', 'title', 'image', 'text', 'cooking_time'
         )
 
     def get_is_favorited(self, obj):
@@ -92,7 +92,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('ingredients', 'image', 'name', 'text', 'cooking_time')
+        fields = ('ingredients', 'image', 'title', 'text', 'cooking_time')
 
     def create(self, validated_data):
         ingredients_data = validated_data.pop('ingredients')
@@ -126,7 +126,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
 class FavoriteSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='recipe.id', read_only=True)
-    name = serializers.CharField(source='recipe.name', read_only=True)
+    title = serializers.CharField(source='recipe.title', read_only=True)
     image = serializers.ImageField(source='recipe.image', read_only=True)
     cooking_time = serializers.IntegerField(
         source='recipe.cooking_time', read_only=True
@@ -134,12 +134,12 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Favorite
-        fields = ('id', 'name', 'image', 'cooking_time')
+        fields = ('id', 'title', 'image', 'cooking_time')
 
 
 class CartItemSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='recipe.id', read_only=True)
-    name = serializers.CharField(source='recipe.name', read_only=True)
+    title = serializers.CharField(source='recipe.title', read_only=True)
     image = serializers.ImageField(source='recipe.image', read_only=True)
     cooking_time = serializers.IntegerField(
         source='recipe.cooking_time', read_only=True
@@ -147,18 +147,18 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
-        fields = ('id', 'name', 'image', 'cooking_time')
+        fields = ('id', 'title', 'image', 'cooking_time')
 
 
 class SubscriptionRecipeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField()
+    title = serializers.CharField()
     image = serializers.ImageField()
     cooking_time = serializers.IntegerField()
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
+        fields = ('id', 'title', 'image', 'cooking_time')
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):

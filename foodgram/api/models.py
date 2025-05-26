@@ -32,7 +32,7 @@ class Ingredient(models.Model):
         verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
-        return f'{self.name} ({self.measurement_unit})'
+        return f'{self.name} ({self.unit})'
 
 
 class Recipe(models.Model):
@@ -76,12 +76,13 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
+        related_name='recipe_ingredients',
         verbose_name='Рецепт'
     )
     ingredient = models.ForeignKey(
@@ -97,7 +98,7 @@ class RecipeIngredient(models.Model):
 
     def __str__(self):
         return f'{self.ingredient.name}: {self.amount} \
-                {self.ingredient.measurement_unit}'
+                {self.ingredient.unit}'
 
 
 class Favorite(models.Model):
@@ -124,7 +125,7 @@ class Favorite(models.Model):
         verbose_name_plural = 'Избранное'
 
     def __str__(self):
-        return f'{self.user.username} → {self.recipe.name}'
+        return f'{self.user.username} → {self.recipe.title}'
 
 
 class CartItem(models.Model):
@@ -151,7 +152,7 @@ class CartItem(models.Model):
         verbose_name_plural = 'Список покупок'
 
     def __str__(self):
-        return f'{self.recipe.name} в списке {self.user.username}'
+        return f'{self.recipe.title} в списке {self.user.username}'
 
 
 class Follow(models.Model):
